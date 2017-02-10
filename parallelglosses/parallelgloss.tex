@@ -1,0 +1,113 @@
+% DOCUMENT CLASS
+\documentclass[12pt]{article}
+
+
+% LINGUISTIC EXAMPLES
+\usepackage{gb4e}
+\noautomath
+\let\eachwordone=\it % italicize transcriptions
+\def\glt{\nobreak\vskip.17\baselineskip} % keep glosses on same page
+\medskip
+
+
+% PARALLEL GLOSSES
+\usepackage{parcolumns} % parallel columns
+\usepackage{enumitem} % needed to number columns
+
+\newcounter{parnum} % counter for paragraphs in texts
+\newcounter{textID}\addtocounter{textID}{1} % unique text ID counter
+
+% command for Arabic transcription with automatic label
+\newcommand{\parabic}[1]{\colchunk{\begin{itemize}[leftmargin=*] \item[\leavevmode\refstepcounter{parnum}\arabic{parnum}]{\textit{#1}\label{\currentsecno-par\arabic{parnum}}}%
+    \end{itemize}}}
+    
+% command for English gloss
+\newcommand{\penglish}[1]{\colchunk{\begin{itemize}%[leftmargin=.3in]
+\item[\arabic{parnum}]{#1}%
+    \end{itemize}}\colplacechunks}
+    
+% command \textref{}{} automating references to label name + line number
+\newcommand{\textref}[2]{\hyperref[\getrefnumber{#1}-par#2]{\nameref{#1}, line #2}}
+
+% command \currentsecno returns current section (needed for automating references)
+\makeatletter
+\newcommand{\currentsecno}{%
+  \ifnum\c@section=0 %
+  \thechapter
+  \else
+  \ifnum\c@subsection=0 %
+  \thesection
+  \else
+  \ifnum\c@subsubsection=0 %
+  \thesubsection
+  \else
+  \thesubsubsection
+  \fi
+  \fi
+  \fi
+}
+
+
+% INTERNAL / EXTERNAL LINK HANDLING
+\usepackage{hyperref} % needs to be called as one of last packages but BEFORE polyglossia
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+%    linkcolor=red,          % color of internal links (change box color with linkbordercolor)
+%    citecolor=blue,        % color of links to bibliography
+%    filecolor=magenta,      % color of file links
+%    urlcolor=cyan           % color of external links
+	allcolors=blue
+}
+
+
+% LANGUAGE / TEXT RENDERING SETUP
+\usepackage{fontspec,xunicode}
+\usepackage{polyglossia} % needs to be called as last package!
+
+\setmainlanguage{english}
+\setotherlanguage{arabic}
+
+\setmainfont[Scale=1,Ligatures=TeX]{Linux Libertine O}
+\newfontfamily\arabicfont[Script=Arabic,Scale=1.3]{Scheherazade}
+
+\begin{document}
+
+\section{Analysis}
+
+This section is largely prose. Within the text, short segments of the source text(s) can be given in linguistic detail using \verb|gb4e| or another linguistics-oriented package:
+
+\begin{exe}
+\ex \label{ex:chad:}
+\gll	 wa ʾabū saʾalā, gāl-a wēn al-hūtāy? \\
+		 and father.\textsc{3msg.poss} ask.\textsc{3msg.pfv} say.\textsc{3msg.pfv} where \textsc{art}-fish\\
+		\glt `the father asked him, he said ``where's the fish?'' (\textref{text:chad}{2})
+\end{exe}
+
+An internal hyperlink to the correct line in the longer text, below, is automatically generated with the macro \verb|\textref{text:chad}{2}|, where the first variable is the subsection label (manually added) and the second variable is the line being referenced.
+
+\section{Texts}
+
+\subsection{Chadian Narrative Text} \label{text:chad}
+
+The following is a retranscription of a text from Roth (1979, pp. 226-228) with an English translation by the current author \ldots\
+
+\begin{parcolumns}[colwidths={1=2 in},nofirstindent]{2}
+%
+
+\parabic{hāda, rāǧil hawwāti. maša hawwat, wa ligiyā, hūtāy, ǧābā fī bēt; wa antā lē wilēda. gāl ʾamšī, bīʾa.}
+\penglish{There was this fisherman. He went and fished and caught one, a fish, he brought it to the house, and gave it to his son. He said ``go, sell it.'' }
+
+\parabic{maša anta lē binēyt as-sultān. wa gabbal ǧāʾ wa ʾabū saʾalā, gāl-a wēn al-hūtāy? gāl yā abūyī (awūyi), al-hūtāy sirig.}
+\penglish{[The son] went and gave it to the Sultan's daughter. When he'd returned the father him; he said ``where's the fish?'' He [the son] said ``Oh father, the fish was stolen.''}
+
+\parabic{wa battan maša, hawwat, wa ǧabā hūtāy wāhid. wa anta lē wilēda. gāl ʾamši bīʾa wa maša, anta lē binēyt as-sultān.}
+\penglish{So again he went, fished, an brought back another fish. And he gave it to his son. He said ``go sell it'' and [the son] went off, gave it to the Sultan's daughter.}
+
+% additional lines are added with \parabic and \penglish
+
+\setcounter{parnum}{0}
+\leavevmode\refstepcounter{textID}
+\end{parcolumns}
+
+
+\end{document}
